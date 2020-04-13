@@ -60,7 +60,7 @@ void desplegar_LCD()
 
 
 //////////////////////////////////////////////*Funcion paraa seleccionar diferentes puestos de memoria del 1 al 5*//////////////////////////////////////////////////////////////
-int  Seleccionar(){
+int  Seleccionar(String modo){
 
   int i = 0;
 
@@ -92,7 +92,7 @@ int  Seleccionar(){
 
 /*Se despliega la opcion en pantalla dependiendo de la variable i*/
     if (i == 6){
-      lcd.print("Salir");
+      lcd.print(modo);
     }
     else{
 /*imprime la palabra Precio junto con el valor que actual de i */
@@ -111,10 +111,12 @@ int  Seleccionar(){
 ///////////////////////////////////////////////////////*funcion que determina el timepo determinado por el usuario*/////////////////////////////////////////////////////////////
 
 void Tiempos (){
+
+  String mensaje_modo = "Tiempo";
   int i = 0;
 
 /*La funcion Seleccionar devuelve una valor que determina en que direccion de memoria */
-  i = Seleccionar();
+  i = Seleccionar(mensaje_modo);
 
 /*Cunado la variable que  regresa la funcion  es 6, es decir, la opcion salor, pasa al final de la ejecucion del programa*/
 while(i == 5){
@@ -183,10 +185,12 @@ while(i == 5){
 /////////////////////////////////////////////////////*funcion que determina el precio determinado por el usuario*/////////////////////////////////////////////////////////////
 
 void Precios (){
+
+  String mensaje_modo = "Precio";
   int i;
 
 /*La funcion Seleccionar devuelve una valor que determina en que direccion de memoria a usar*/
-  i = Seleccionar();
+  i = Seleccionar(mensaje_modo);
 
 /*Cunado la variable que  regresa la funcion  es 6, es decir, la opcion salor, pasa al final de la ejecucion del programa*/
 while(i == 5){
@@ -257,6 +261,7 @@ void Enjuague(){
 
   int i;
   bool enjuague;
+  String mensaje_modo = "Enjuague";
 
 
   lcd.clear();
@@ -277,10 +282,7 @@ void Enjuague(){
       
   }
 
-  Seleccionar();
-
-
-  
+  Seleccionar(mensaje_modo);  
 }
 
 /////////////////////////////////////////////////////*Establece los parametros iniciales*/////////////////////////////////////////////////////////////////////////////////////////////
