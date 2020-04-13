@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <EEPROM.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
@@ -28,7 +29,7 @@ String texto_boton1 = "Deposite    pesos";
 
 void setup() {
   // put your setup code here, to run once:
-lcd.begin();
+lcd.init();
 lcd.backlight();
 Serial.begin(9600); 
 pinMode(boton[0],INPUT);

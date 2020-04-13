@@ -1,9 +1,9 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 #include <Wire.h>
-#include <LiquidCrystal.h>
+#include <LiquidCrystal_I2C.h>
 
-LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
+LiquidCrystal_I2C lcd(0x27, 16, 2);//direccion de la lcd
 
 /* direcciones de utilizadas de la memoria EEPROM */
 
@@ -30,6 +30,13 @@ const bool enjuague_i = true;
 ///////////////////////////////////////////////Creando Funcion para desplegar informacion en la pantalla LCD////////////////////////////////////////////////////////////////////
 void desplegar_LCD()
 {
+  int width=16;
+  int height=16;
+  int scroll=width;
+  int Starttext,Endtext=0;
+  String line2;
+  String line1;
+  
  //primer bloque de modo venta muestra en la pantalla el nombre de la purificadora y se espera a que se realice una accion
   line1 = "PURIFICADORA DE AGUA " + line2;
   lcd.setCursor(0,1);
@@ -245,8 +252,6 @@ while(i == 5){
 
 }
 
-
-
 //////////////////////////////////////////*funcion que determina el tiempo de enjuague determinado por el usuario*////////////////////////////////////////////////////////////////////////////////
 void Enjuague(){
 
@@ -287,7 +292,7 @@ void Calibrar(){
   pinMode(boton_3, INPUT);
   pinMode(boton_4, INPUT);
 
-  lcd.begin(16,4);
+  lcd.init();
   lcd.print("Hola");
 }
 
