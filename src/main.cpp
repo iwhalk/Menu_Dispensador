@@ -27,6 +27,31 @@ const bool enjuague_i = true;
 #define numero_opciones   4 //opciones para controlar el menu principal
 #define numero_opciones_1 5 //opciones apra controlae la seleccion de tiempo y precio
 
+///////////////////////////////////////////////Creando Funcion para desplegar informacion en la pantalla LCD////////////////////////////////////////////////////////////////////
+void desplegar_LCD()
+{
+ //primer bloque de modo venta muestra en la pantalla el nombre de la purificadora y se espera a que se realice una accion
+  line1 = "PURIFICADORA DE AGUA " + line2;
+  lcd.setCursor(0,1);
+  lcd.print("Deposite monedas");
+  lcd.setCursor(scroll,0);
+  lcd.print(line1.substring(Starttext,Endtext));
+    delay(400);
+    lcd.clear();
+  if(Starttext==0 && scroll>0){//Aqui se hace que las letras vayan apareciendo una por una, disminuyendo el scroll en uno y aumentando el endtext lo que hace que el substring muestre un carcter mas en la cadena
+    scroll--;
+    Endtext++;}
+  else if(Starttext==Endtext){//este if se encarga de volver a mostrar el cursor en la posicion 16,0 cuando se haya acabado de mostrar la ultima letra de nuestra linea
+     Starttext=Endtext=0;
+      scroll=width;}
+  else if (Endtext==line1.length() && scroll==0){//esta condicional hara que empiecen a desaparecer las letras iniciales de la linea 
+    Starttext++;}
+   else{
+      Starttext++;
+      Endtext++;}
+}
+
+
 //////////////////////////////////////////////*Funcion paraa seleccionar diferentes puestos de memoria del 1 al 5*//////////////////////////////////////////////////////////////
 int  Seleccionar(){
 
