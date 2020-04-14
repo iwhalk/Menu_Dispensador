@@ -83,23 +83,23 @@ int  Seleccionar(String modo){
   do
   {
 
-    if (digitalRead(boton_1)){
+    if (digitalRead(boton_1) == LOW){
 /*Cada vez que se presiona el digitalRead(boton_1) se agrega una unidad a la varible i y por lo tanto se selecciona la opcion siguiente*/
 
       i = i + 1;
     }
-    else if ( (digitalRead(boton_1)) && (i == numero_opciones_1) )
+    else if ( (digitalRead(boton_1) == LOW) && (i == numero_opciones_1) )
     {
 /*Cuando le agregas una unidad a la varible i y a llegado a la ultima opcion se regresa a la primera*/
 
       i = 0;
     }
-    else if( (digitalRead(boton_2)) && (i != 0) ){
+    else if( (digitalRead(boton_2) == LOW) && (i != 0) ){
 /*Cada vez que se presiona el digitalRead(boton_2) se resta una unidad a la varible i y por lo tanto se selecciona la opcion anterior*/
 
       i = i - 1;
     }
-    else if ( (digitalRead(boton_2)) && (i == 0) )
+    else if ( (digitalRead(boton_2) == LOW) && (i == 0) )
     {
 /*Cuando le restas una unidad a la varible y a llegado a la primera opcion, avanza a la ultima*/
 
@@ -177,7 +177,7 @@ while(i != 5){
   {
 /*Al precio se le suma una unidad */
   lcd.clear();
-    if(digitalRead(boton_1)){
+    if(digitalRead(boton_1) == LOW){
 
       if (tiempo_a == 0){                                          //Cuando comenzamos a cambiar el tiempo la variable auxiliar inica en 0, entonce utilizamos esta condicion para agregarle una unidad al presionar el boton
         tiempo_a = tiempo_i + 1;
@@ -200,7 +200,7 @@ while(i != 5){
 
     }
 /*Al preco se le resta una unidad */
-    else if (digitalRead(boton_2)){
+    else if (digitalRead(boton_2) == LOW){
 
       if (tiempo_a == 0){                                         //Cuando comenzamos a cambiar el tiempo, al variable auxiliar inica en 0, utilizamos esta condicion para quitarle una unidad al presionar el boton
         tiempo_a = tiempo_i - 1;
@@ -223,7 +223,7 @@ while(i != 5){
 
     }
 
-  } while (digitalRead(boton_3) == 0);                                         
+  } while (digitalRead(boton_3) == HIGH);                                         
   EEPROM.write(direccion_p[i], tiempo_a);
 }
 
@@ -276,7 +276,7 @@ while(i != 5){
   {
 /*Al precio base de le suma una unidad */
   lcd.clear();
-    if(digitalRead(boton_1)){
+    if(digitalRead(boton_1) == LOW){
 
       if (precio_a == 0){                                          //Cuando comenzamos a cambiar el tiempo la variable auxiliar inica en 0, entonce utilizamos esta condicion para agregarle una unidad al presionar el boton
         precio_a = precio_i + 1;
@@ -299,7 +299,7 @@ while(i != 5){
 
     }
 /*Al tiempo base de le resta una unidad */
-    else if (digitalRead(boton_2)){
+    else if (digitalRead(boton_2) == LOW){
 
       if (precio_a == 0){                                         //Cuando comenzamos a cambiar el tiempo, al variable auxiliar inica en 0, utilizamos esta condicion para quitarle una unidad al presionar el boton
         precio_a = precio_i - 1;
@@ -321,9 +321,11 @@ while(i != 5){
       }
 
     }
-  } while (digitalRead(boton_3) == 0);                                         
+  } while (digitalRead(boton_3) == HIGH);                                         
   EEPROM.write(direccion_t[i], precio_a);
 }
+
+
 
 }
 
@@ -340,20 +342,33 @@ void Enjuague(){
   lcd.print("Oprima arriba y abajo para seleccionar");
 
   if( (EEPROM.read(direccion_e)) == 255){
+    lcd.clear();
+    lcd.setCursor(7,0);
+    lcd.print(mensaje_modo);
+    lcd.setCursor(0,1);
     lcd.print("Enjuague Activado");
   }
 
   else{
     if(EEPROM.read(direccion_e) == true){
+
+      lcd.clear();
+      lcd.setCursor(7,0);
+      lcd.print(mensaje_modo);
+      lcd.setCursor(0,1);
       lcd.print("Enjuague Desactivado");
     }
     else{
+      lcd.clear();
+      lcd.setCursor(7,0);
+      lcd.print(mensaje_modo);
+      lcd.setCursor(0,1);
       lcd.print("Enjuague Desactivado");
     }
       
   }
 
-  Seleccionar(mensaje_modo);  
+
 }
 
 /////////////////////////////////////////////////////*Establece los parametros iniciales*/////////////////////////////////////////////////////////////////////////////////////////////
@@ -370,7 +385,7 @@ void Calibrar(){
   lcd.print("Hola");
 }
 
-/////////////////////////////////////////////////////////////*Funcion para desplegar el menu*////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////*Funcion para desplegar el menu*////////////////////////////////////o////////////////////////////
 
 void menu(){
 
@@ -390,20 +405,20 @@ void menu(){
 /*inicia ciclo para seleccionar la opcion deseeada dependiando del boton presionado, termina cunado se presiona el digitalRead(boton_3)*/
   do
   {
-    if (digitalRead(boton_1)){
+    if (digitalRead(boton_1) == LOW){
 /*al presionar el boton 1 de le agrega una unidad a la varible i*/
       i = i + 1;
     }
-    else if ( (digitalRead(boton_1)) && (i == numero_opciones) )
+    else if ( (digitalRead(boton_1) == LOW) && (i == numero_opciones) )
     {
 /*Cuando se le quiere añadir una unidad a la variable i pero ya se ha llegado a la ultima opcion se regresa a la primera*/
       i = 0;
     }
-    else if( (digitalRead(boton_2)) && (i != 0) ){
+    else if( (digitalRead(boton_2) == LOW) && (i != 0) ){
 /*Cuando se presiona el digitalRead(boton_2) se le resta una unidad a la variable i*/
       i = i - 1;
     }
-    else if ( (digitalRead(boton_2)) && (i == 0) )
+    else if ( (digitalRead(boton_2) == LOW) && (i == 0) )
     {
 /*Cunado se le quiere restar una unidad a la varible i pero ya ha llegado a la primera se pasa a la ultima*/
       i = numero_opciones;
@@ -482,3 +497,6 @@ void setup() {
 void loop() {
   menu();
 }
+
+//mensaje secreto
+
