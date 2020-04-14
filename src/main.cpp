@@ -28,34 +28,41 @@ const bool enjuague_i = true;
 #define numero_opciones_1 5 //opciones apra controlae la seleccion de tiempo y precio
 
 ///////////////////////////////////////////////Creando Funcion para desplegar informacion en la pantalla LCD////////////////////////////////////////////////////////////////////
-void desplegar_LCD()
+void desplegar_LCD(String line0, String line1, String line2)
 {
-  int width=16;
-  int height=16;
-  int scroll=width;
-  int Starttext,Endtext=0;
-  String line2;
-  String line1;
+  do{
+
+    int width=16;
+    int height=16;
+    int scroll=width;
+    int Starttext,Endtext=0;
   
- //primer bloque de modo venta muestra en la pantalla el nombre de la purificadora y se espera a que se realice una accion
-  line1 = "PURIFICADORA DE AGUA " + line2;
-  lcd.setCursor(0,1);
-  lcd.print("Deposite monedas");
-  lcd.setCursor(scroll,0);
-  lcd.print(line1.substring(Starttext,Endtext));
+//primer bloque de modo venta muestra en la pantalla el nombre de la purificadora y se espera a que se realice una accion
+    lcd.setCursor(0,1);
+    lcd.print(line1);
+    lcd.setCursor(scroll,0);
+    lcd.print(line0.substring(Starttext,Endtext));
     delay(400);
     lcd.clear();
-  if(Starttext==0 && scroll>0){//Aqui se hace que las letras vayan apareciendo una por una, disminuyendo el scroll en uno y aumentando el endtext lo que hace que el substring muestre un carcter mas en la cadena
-    scroll--;
-    Endtext++;}
-  else if(Starttext==Endtext){//este if se encarga de volver a mostrar el cursor en la posicion 16,0 cuando se haya acabado de mostrar la ultima letra de nuestra linea
-     Starttext=Endtext=0;
-      scroll=width;}
-  else if (Endtext==line1.length() && scroll==0){//esta condicional hara que empiecen a desaparecer las letras iniciales de la linea 
-    Starttext++;}
-   else{
+
+    if(Starttext==0 && scroll>0){//Aqui se hace que las letras vayan apareciendo una por una, disminuyendo el scroll en uno y aumentando el endtext lo que hace que el substring muestre un carcter mas en la cadena
+      scroll--;
+      Endtext++;
+    }
+    else if(Starttext==Endtext){//este if se encarga de volver a mostrar el cursor en la posicion 16,0 cuando se haya acabado de mostrar la ultima letra de nuestra linea
+       Starttext=Endtext=0;
+        scroll=width;
+    }
+    else if (Endtext==line0.length() && scroll==0){//esta condicional hara que empiecen a desaparecer las letras iniciales de la linea 
       Starttext++;
-      Endtext++;}
+    }
+    else{
+        Starttext++;
+        Endtext++;
+    }
+
+  }while ( (digitalRead(boton_1) == HIGH) || (digitalRead(boton_2) == HIGH) || (digitalRead(boton_3) == HIGH) );
+  
 }
 
 
@@ -63,6 +70,15 @@ void desplegar_LCD()
 int  Seleccionar(String modo){
 
   int i = 0;
+  String presentacion = modo + "s";
+
+  lcd.clear();
+  lcd.setCursor(7, 0);
+  lcd.print(presentacion);
+  lcd.setCursor(8,1);
+  lcd.print(modo);
+  lcd.setCursor(14,1);
+  lcd.print(i + 1);
 
   do
   {
@@ -97,13 +113,16 @@ int  Seleccionar(String modo){
     else{
 /*imprime la palabra Precio junto con el valor que actual de i */
       lcd.clear();
-      lcd.setCursor(2, 8);
-      lcd.print("Tiempo ");
-      lcd.setCursor(2,15);
+      lcd.setCursor(7, 0);
+      lcd.print(presentacion);
+      lcd.setCursor(8,1);
+      lcd.print(modo);
+      lcd.setCursor(14,1);
       lcd.print(i + 1);
     }
 
-  } while (digitalRead(boton_3) == 1);
+  delay(500);
+  } while (digitalRead(boton_3) == HIGH);
 
   return i;
 }
@@ -119,7 +138,7 @@ void Tiempos (){
   i = Seleccionar(mensaje_modo);
 
 /*Cunado la variable que  regresa la funcion  es 6, es decir, la opcion salor, pasa al final de la ejecucion del programa*/
-while(i == 5){
+while(i != 5){
 
 /*Variables auxiliares para desplegar y cambiar el timepo*/
   int tiempo_a = 0;
@@ -128,17 +147,28 @@ while(i == 5){
 /*Se le asigna lo que hay en la direccion_p seleccionada en la variale tiempo_b*/
   tiempo_b = EEPROM.read(direccion_p[i]);
 
-  lcd.setCursor(0, 0);
-  lcd.print("Oprima arriba y abajo para ajustar el tiempo");
-  lcd.setCursor(2, 8);
+  String mensaje_opciones = "Oprima arriba y abajo para seleccionar";
+  String mensaje_titulo = "SELECCION";
+  String mensaje3;
+
+  desplegar_LCD(mensaje_opciones, mensaje_titulo, mensaje3);
+  
 
 /*si tiempo_b es igual 255 significa que no hay nada escrito en esa direccion y por lo tanto imprime el tiempo base, de lo contrario imprime el timepo_b*/
   if (tiempo_b == 255)
   {
+    lcd.clear();
+    lcd.setCursor(7,0);
+    lcd.print(mensaje_modo);
+    lcd.setCursor(0,1);
     lcd.print(tiempo_i);
   }
   else
   {
+    lcd.clear();
+    lcd.setCursor(7,0);
+    lcd.print(mensaje_modo);
+    lcd.setCursor(0,1);
     lcd.print(tiempo_b);
   }
   
@@ -151,12 +181,20 @@ while(i == 5){
 
       if (tiempo_a == 0){                                          //Cuando comenzamos a cambiar el tiempo la variable auxiliar inica en 0, entonce utilizamos esta condicion para agregarle una unidad al presionar el boton
         tiempo_a = tiempo_i + 1;
+        
         lcd.clear();
+        lcd.setCursor(7,0);
+        lcd.print(mensaje_modo);
+        lcd.setCursor(0,1);
         lcd.print(tiempo_a);
       }
       else{                                                        //Despues la variable auxiliar ya tiene valores almacenado y utilizamos esta condicion para agregarle una unidad al presionar el boton
         tiempo_a = tiempo_a + 1;
+
         lcd.clear();
+        lcd.setCursor(7,0);
+        lcd.print(mensaje_modo);
+        lcd.setCursor(0,1);
         lcd.print(tiempo_a);
       }
 
@@ -166,16 +204,25 @@ while(i == 5){
 
       if (tiempo_a == 0){                                         //Cuando comenzamos a cambiar el tiempo, al variable auxiliar inica en 0, utilizamos esta condicion para quitarle una unidad al presionar el boton
         tiempo_a = tiempo_i - 1;
+
         lcd.clear();
+        lcd.setCursor(7,0);
+        lcd.print(mensaje_modo);
+        lcd.setCursor(0,1);
         lcd.print(tiempo_a);
       }
       else{
         tiempo_a = tiempo_a - 1;                                  //Despues la variable auxiliar ya tiene valores almacenado y utilizamos esta condicion para quitarle una unidad al presionar el boton
+        
         lcd.clear();
+        lcd.setCursor(7,0);
+        lcd.print(mensaje_modo);
+        lcd.setCursor(0,1);
         lcd.print(tiempo_a);      
       }
 
     }
+
   } while (digitalRead(boton_3) == 0);                                         
   EEPROM.write(direccion_p[i], tiempo_a);
 }
@@ -193,7 +240,7 @@ void Precios (){
   i = Seleccionar(mensaje_modo);
 
 /*Cunado la variable que  regresa la funcion  es 6, es decir, la opcion salor, pasa al final de la ejecucion del programa*/
-while(i == 5){
+while(i != 5){
 
 /*Variables auxiliares para desplegar y cambiar el timepo*/
   int precio_a = 0;
@@ -209,10 +256,18 @@ while(i == 5){
 /*si precio_b es igual 255 significa que no hay nada escrito en esa direccion y por lo tanto imprime el tiempo base, de lo contrario imprime el timepo_b*/
   if (precio_b == 255)
   {
+    lcd.clear();
+    lcd.setCursor(7,0);
+    lcd.print(mensaje_modo);
+    lcd.setCursor(0,1);
     lcd.print(precio_i);
   }
   else
   {
+    lcd.clear();
+    lcd.setCursor(7,0);
+    lcd.print(mensaje_modo);
+    lcd.setCursor(0,1);
     lcd.print(precio_b);
   }
   
@@ -225,12 +280,20 @@ while(i == 5){
 
       if (precio_a == 0){                                          //Cuando comenzamos a cambiar el tiempo la variable auxiliar inica en 0, entonce utilizamos esta condicion para agregarle una unidad al presionar el boton
         precio_a = precio_i + 1;
+        
         lcd.clear();
+        lcd.setCursor(7,0);
+        lcd.print(mensaje_modo);
+        lcd.setCursor(0,1);
         lcd.print(precio_a);
       }
       else{                                                        //Despues la variable auxiliar ya tiene valores almacenado y utilizamos esta condicion para agregarle una unidad al presionar el boton
         precio_a = precio_a + 1;
+        
         lcd.clear();
+        lcd.setCursor(7,0);
+        lcd.print(mensaje_modo);
+        lcd.setCursor(0,1);
         lcd.print(precio_a);
       }
 
@@ -240,12 +303,20 @@ while(i == 5){
 
       if (precio_a == 0){                                         //Cuando comenzamos a cambiar el tiempo, al variable auxiliar inica en 0, utilizamos esta condicion para quitarle una unidad al presionar el boton
         precio_a = precio_i - 1;
+        
         lcd.clear();
+        lcd.setCursor(7,0);
+        lcd.print(mensaje_modo);
+        lcd.setCursor(0,1);
         lcd.print(precio_a);
       }
       else{
         precio_a = precio_a - 1;                                  //Despues la variable auxiliar ya tiene valores almacenado y utilizamos esta condicion para quitarle una unidad al presionar el boton
+        
         lcd.clear();
+        lcd.setCursor(7,0);
+        lcd.print(mensaje_modo);
+        lcd.setCursor(0,1);
         lcd.print(precio_a);      
       }
 
@@ -289,10 +360,11 @@ void Enjuague(){
 
 void Calibrar(){
 
-  pinMode(boton_1, INPUT);
-  pinMode(boton_2, INPUT);
-  pinMode(boton_3, INPUT);
-  pinMode(boton_4, INPUT);
+  lcd.backlight();
+  pinMode(boton_1, INPUT_PULLUP);
+  pinMode(boton_2, INPUT_PULLUP);
+  pinMode(boton_3, INPUT_PULLUP);
+  pinMode(boton_4, INPUT_PULLUP);
 
   lcd.init();
   lcd.print("Hola");
@@ -308,8 +380,12 @@ void menu(){
   
 /*Imprimir en pantalla lcd*/
   lcd.clear();
-  lcd.setCursor(1, 3);
-  lcd.print("Oprima arriba y abajo para seleccionar");
+  
+  String mensaje_opciones = "Oprima arriba y abajo para seleccionar";
+  String mensaje_titulo = "CONFIGURACION";
+  String mensaje3;
+
+  desplegar_LCD(mensaje_opciones, mensaje_titulo, mensaje3);
 
 /*inicia ciclo para seleccionar la opcion deseeada dependiando del boton presionado, termina cunado se presiona el digitalRead(boton_3)*/
   do
@@ -335,7 +411,9 @@ void menu(){
 
 /*Dependiendo del valor de la variable "i" imprime la opcion a seleccionar*/    
     lcd.clear();
-    lcd.setCursor(2, 8);
+    lcd.setCursor(7, 0);
+    lcd.print("MENU");
+    lcd.setCursor(2, 1);
     switch (i)
     {
     case 0:
@@ -360,7 +438,7 @@ void menu(){
       break;
     }
 /*El ciclo solo termina cuando presionamos el digitalRead(boton_3) o la opcion salir*/
-  } while ( (digitalRead(boton_3) == 1) || (salir == true));
+  } while ( (digitalRead(boton_3) == HIGH) || (salir == true));
 
 /*Dependiendo del valor de la variabe i se ejecuta la funcion deseada*/
 
@@ -379,11 +457,15 @@ void menu(){
 //     Fecha();
      break;
    case 4:
-     lcd.print("Saliendo");
-     break;
+    lcd.clear();
+    lcd.print("Saliendo");
+    delay(500);
+    break;
    default:
-     lcd.print("Error, Inente de Nuevo");
-     break;
+    lcd.clear();
+    lcd.print("Error, Inente de Nuevo");
+    delay(500);
+    break;
     }
   
 /*Solo cuando se selecciono la opcion salir termina el ciclo y, por lo tanto, la funcion del menu */
