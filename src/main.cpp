@@ -28,6 +28,11 @@ const bool enjuague_i = true;
 #define numero_opciones_1 5 //opciones apra controlae la seleccion de tiempo y precio
 
 ///////////////////////////////////////////////Creando Funcion para desplegar informacion en la pantalla LCD////////////////////////////////////////////////////////////////////
+void basico_LCD(){
+  
+}
+
+///////////////////////////////////////////////Creando Funcion para desplegar informacion en la pantalla LCD////////////////////////////////////////////////////////////////////
 void desplegar_LCD(String line0, String line1, String line2)
 {
   do{
