@@ -29,7 +29,7 @@ const bool enjuague_i = true;
 
 ///////////////////////////////////////////////Creando Funcion para desplegar informacion en la pantalla LCD////////////////////////////////////////////////////////////////////
 void basico_LCD(){
-  hola
+  
 }
 
 ///////////////////////////////////////////////Creando Funcion para desplegar informacion en la pantalla LCD////////////////////////////////////////////////////////////////////
@@ -339,19 +339,19 @@ void Enjuague(){
 
   int i;
   bool enjuague;
+
+  String mensaje_opciones = "Oprima arriba y abajo para seleccionar. Enter para confirmar";
   String mensaje_modo = "Enjuague";
+  String mensaje3;
 
-
-  lcd.clear();
-  lcd.setCursor(1, 3);
-  lcd.print("Oprima arriba y abajo para seleccionar");
+  desplegar_LCD(mensaje_opciones, mensaje_modo, mensaje3);
 
   if( (EEPROM.read(direccion_e)) == 255){
     lcd.clear();
     lcd.setCursor(7,0);
     lcd.print(mensaje_modo);
     lcd.setCursor(0,1);
-    lcd.print("Enjuague Activado");
+    lcd.print("Activado");
   }
 
   else{
@@ -361,18 +361,49 @@ void Enjuague(){
       lcd.setCursor(7,0);
       lcd.print(mensaje_modo);
       lcd.setCursor(0,1);
-      lcd.print("Enjuague Desactivado");
+      lcd.print("Activado");
+      enjuague = true;
     }
     else{
       lcd.clear();
       lcd.setCursor(7,0);
       lcd.print(mensaje_modo);
       lcd.setCursor(0,1);
-      lcd.print("Enjuague Desactivado");
+      lcd.print("Desactivado");
+      enjuague = false;
     }
       
   }
 
+  do{
+
+  
+  if ( (digitalRead(boton_1) == LOW) || (digitalRead(boton_2) == LOW) ){
+  
+    enjuague = !enjuague;
+
+  }
+
+  if (enjuague == true){
+    lcd.clear();
+    lcd.setCursor(7,0);
+    lcd.print(mensaje_modo);
+    lcd.setCursor(0,1);
+    lcd.print("Activado");   
+  }
+  else
+  {
+    lcd.clear();
+    lcd.setCursor(7,0);
+    lcd.print(mensaje_modo);
+    lcd.setCursor(0,1);
+    lcd.print("Desactivado");   
+  }
+  
+
+  }while ( (digitalRead(boton_3) == HIGH));
+  
+  EEPROM.write(direccion_e, enjuague);
 
 }
 
@@ -502,6 +533,3 @@ void setup() {
 void loop() {
   menu();
 }
-
-//Mensaje Secreto
-
