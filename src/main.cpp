@@ -22,7 +22,6 @@ const int direccion_e    = 10;
 
 const int tiempo_i = 10;
 const int precio_i = 10;
-const bool enjuague_i = true;
 
 #define numero_opciones   4 //opciones para controlar el menu principal
 #define numero_opciones_1 5 //opciones apra controlae la seleccion de tiempo y precio
@@ -33,6 +32,7 @@ void basico_LCD(){
 }
 
 ///////////////////////////////////////////////Creando Funcion para desplegar informacion en la pantalla LCD////////////////////////////////////////////////////////////////////
+//Se la copie a eduardo
 void desplegar_LCD(String line0, String line1, String line2)
 {
   do{
@@ -75,7 +75,7 @@ void desplegar_LCD(String line0, String line1, String line2)
 int  Seleccionar(String modo){
 
   int i = 0;
-  String presentacion = modo + "s";
+  String presentacion = modo + "s"; //se le agraga la letra "s" al final de  la palabra qu envian en la cadena "modo" que le envian la funcion donde se utiliza
 
   lcd.clear();
   lcd.setCursor(7, 0);
@@ -83,7 +83,7 @@ int  Seleccionar(String modo){
   lcd.setCursor(8,1);
   lcd.print(modo);
   lcd.setCursor(14,1);
-  lcd.print(i + 1);
+  lcd.print(i + 1); //Se le agrega uno a la variable i para imprimir por que esta empiza desde 0
 
   do
   {
@@ -127,6 +127,7 @@ int  Seleccionar(String modo){
     }
 
   delay(500);
+//Sale del ciclo cuando se presiona el boton_3
   } while (digitalRead(boton_3) == HIGH);
 
   return i;
