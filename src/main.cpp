@@ -327,7 +327,7 @@ while(i != 5){
 
     }
   } while (digitalRead(boton_3) == HIGH);                                         
-  EEPROM.write(direccion_t[i], precio_a);
+  EEPROM.write(direccion_t[i], precio_a);                 //Escribe en la memorio el precio que quedo seleccionado
 }
 
 
@@ -343,9 +343,10 @@ void Enjuague(){
   String mensaje_opciones = "Oprima arriba y abajo para seleccionar. Enter para confirmar";
   String mensaje_modo = "Enjuague";
   String mensaje3;
-
+// Manda a llamar la funcion desplegar_LCD para desplehar las opciones en scroll y la palabra "Enjuague"
   desplegar_LCD(mensaje_opciones, mensaje_modo, mensaje3);
 
+// Si es la primera vez que se escribe en la memoria entonce la informacion contenida en esa direccion es 255 y por lo tanto se activa el enjuague en el primer inicio
   if( (EEPROM.read(direccion_e)) == 255){
     lcd.clear();
     lcd.setCursor(7,0);
@@ -354,7 +355,10 @@ void Enjuague(){
     lcd.print("Activado");
   }
 
+//Caso contrario manda despliega la opcion previamente almacenada
+
   else{
+//Para el valor booleano verdadero se activa el enjuague
     if(EEPROM.read(direccion_e) == true){
 
       lcd.clear();
@@ -364,6 +368,7 @@ void Enjuague(){
       lcd.print("Activado");
       enjuague = true;
     }
+//Para el valor booleano falso se desactiva el enjuaghue
     else{
       lcd.clear();
       lcd.setCursor(7,0);
@@ -376,14 +381,15 @@ void Enjuague(){
   }
 
   do{
-
+//Entra en el ciclo para activar y desactivar el enjuague
   
   if ( (digitalRead(boton_1) == LOW) || (digitalRead(boton_2) == LOW) ){
-  
+//Si se apreta cualquiera de los dos botones el estado de activacion del enjuague cambia al valor booleano contrario
     enjuague = !enjuague;
 
   }
 
+//Nuevamente despliega en pantalla el estado de activacion del enjuague dependiendo del valor booleano que tenga la variable enjuague
   if (enjuague == true){
     lcd.clear();
     lcd.setCursor(7,0);
@@ -400,10 +406,10 @@ void Enjuague(){
     lcd.print("Desactivado");   
   }
   
-
+//Oprimir el boton_3 termina el ciclo 
   }while ( (digitalRead(boton_3) == HIGH));
   
-  EEPROM.write(direccion_e, enjuague);
+  EEPROM.write(direccion_e, enjuague); //Escribe en memoria el valor final de la varible enjuague que contiene un valor booleano
 
 }
 
